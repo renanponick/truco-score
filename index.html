@@ -23,7 +23,6 @@
     --team-b-dim: #275257;
     --text: #EDE7D9;
     --text-muted: #8FA396;
-    --danger: #C1462E;
     --radius-lg: 22px;
     --radius-md: 14px;
     --radius-sm: 10px;
@@ -40,6 +39,7 @@
     color: var(--text);
     font-family: var(--font-body);
     min-height: 100dvh;
+    transition: background 0.25s ease;
   }
 
   body{
@@ -53,7 +53,7 @@
     max-width: 480px;
     display:flex;
     flex-direction:column;
-    gap: 14px;
+    gap: 12px;
     padding-top: 6px;
   }
 
@@ -64,7 +64,7 @@
     cursor:pointer;
     background:none;
   }
-  button:focus-visible, [contenteditable]:focus-visible{
+  button:focus-visible, [contenteditable]:focus-visible, input:focus-visible{
     outline: 2px solid var(--gold);
     outline-offset: 2px;
   }
@@ -77,17 +77,40 @@
     gap:10px;
     padding: 4px 2px;
   }
+  .title-row{
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
   header h1{
     font-family: var(--font-display);
     font-weight: 600;
-    font-size: clamp(22px, 6vw, 26px);
+    font-size: clamp(20px, 5.6vw, 25px);
     margin:0;
     letter-spacing: 0.2px;
+  }
+  .icon-btn{
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color: var(--text-muted);
+    flex-shrink:0;
+    font-size:16px;
+  }
+  .header-right{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-end;
+    gap:6px;
   }
   .wins{
     display:flex;
     gap:6px;
-    flex-shrink:0;
   }
   .win-pill{
     display:flex;
@@ -97,18 +120,99 @@
     border: 1px solid var(--border);
     border-radius: 999px;
     padding: 5px 10px;
-    font-size: 12.5px;
+    font-size: 12px;
     color: var(--text-muted);
     white-space:nowrap;
+    max-width: 120px;
+    overflow:hidden;
   }
+  .win-pill span{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
   .win-pill b{
     font-family: var(--font-display);
     font-size: 15px;
     color: var(--text);
     font-weight: 700;
+    flex-shrink:0;
   }
   .win-pill.a b{ color: var(--team-a); }
   .win-pill.b b{ color: var(--team-b); }
+
+  /* dealer bar */
+  .dealer-bar{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 10px 10px 11px;
+  }
+  .dealer-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+  }
+  .dealer-label{
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight:700;
+    white-space:nowrap;
+  }
+  .direction-btn{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 6px 12px;
+    font-size: 11.5px;
+    font-weight:700;
+    color: var(--text-muted);
+    flex-shrink:0;
+  }
+  .direction-btn .arrow{
+    font-size: 13px;
+    color: var(--gold);
+    line-height:1;
+  }
+  .dealer-seats{
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+  }
+  .seat-chip{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:3px;
+    padding: 7px 3px 8px;
+    border-radius: var(--radius-sm);
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    min-width:0;
+  }
+  .seat-chip .seat-name{
+    font-size: 11px;
+    font-weight:700;
+    color: var(--text-muted);
+    max-width: 100%;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+  .seat-chip .seat-suit{
+    font-size: 12px;
+    opacity: 0;
+    line-height:1;
+  }
+  .seat-chip.a .seat-name{ color: var(--team-a); }
+  .seat-chip.b .seat-name{ color: var(--team-b); }
+  .seat-chip.active{ border-color: var(--gold); }
+  .seat-chip.active.a{ background: var(--team-a-dim); }
+  .seat-chip.active.b{ background: var(--team-b-dim); }
+  .seat-chip.active .seat-suit{ opacity:1; color: var(--gold); }
 
   /* scoreboard */
   .scoreboard{
@@ -165,11 +269,13 @@
   .score{
     font-family: var(--font-display);
     font-weight: 800;
-    font-size: clamp(58px, 20vw, 84px);
+    font-size: clamp(56px, 19vw, 80px);
     line-height: 1;
     font-variant-numeric: tabular-nums;
     transition: transform 0.15s ease;
   }
+  .team-a .score{ color: var(--team-a); }
+  .team-b .score{ color: var(--team-b); }
   .score.bump{ transform: scale(1.12); }
 
   .mao11{
@@ -228,8 +334,8 @@
     padding: 0 2px;
   }
   .coin{
-    width: 42px;
-    height: 42px;
+    width: 52px;
+    height: 52px;
     border-radius: 50%;
     border: 1.5px dashed var(--gold-dim);
     display:flex;
@@ -240,6 +346,15 @@
     font-weight:700;
     font-size: 15px;
     margin-top: 30px;
+    overflow:hidden;
+    background: var(--surface-2);
+    flex-shrink:0;
+  }
+  .coin img{
+    width:100%;
+    height:100%;
+    object-fit: cover;
+    border-radius:50%;
   }
 
   /* stake */
@@ -400,18 +515,20 @@
     justify-content:center;
     padding: 24px;
     z-index: 20;
+    overflow-y:auto;
   }
   .overlay-card{
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
-    padding: 28px 24px;
-    max-width: 340px;
+    padding: 26px 22px;
+    max-width: 360px;
     width:100%;
     text-align:center;
     display:flex;
     flex-direction:column;
     gap: 10px;
+    margin: auto;
   }
   .win-title{
     font-family: var(--font-display);
@@ -431,7 +548,7 @@
     font-size: 13.5px;
     margin: 0 0 10px;
   }
-  .overlay-card button{
+  .overlay-card > button, .overlay-card .primary{
     background: var(--gold);
     color: #241C0C;
     font-weight:800;
@@ -468,6 +585,133 @@
     color: #FCEEEA;
   }
 
+  /* settings modal */
+  .settings-card{
+    text-align:left;
+    max-width: 380px;
+    max-height: 88vh;
+    overflow-y:auto;
+  }
+  .settings-title{
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight:700;
+    margin: 0 0 2px;
+  }
+  .settings-section{
+    border-top: 1px solid var(--border);
+    padding-top: 14px;
+    margin-top: 4px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .settings-section:first-of-type{ border-top:none; padding-top:0; margin-top:0; }
+  .settings-label{
+    font-size: 12.5px;
+    font-weight:700;
+    color: var(--text-muted);
+    margin:0;
+  }
+  .logo-row{
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .logo-preview{
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: var(--surface-2);
+    border: 1px dashed var(--border);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    flex-shrink:0;
+    color: var(--text-muted);
+    font-size:11px;
+    text-align:center;
+  }
+  .logo-preview img{ width:100%; height:100%; object-fit:cover; }
+  .file-btn-row{
+    display:flex;
+    gap:8px;
+    flex:1;
+  }
+  .file-btn-row label, .file-btn-row button{
+    flex:1;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 10px 8px;
+    font-size: 12.5px;
+    font-weight:700;
+    color: var(--text);
+    text-align:center;
+    cursor:pointer;
+  }
+  input[type="file"]{ display:none; }
+  .color-row{
+    display:flex;
+    gap:10px;
+  }
+  .color-field{
+    flex:1;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 6px 10px;
+  }
+  .color-field span{ font-size:12px; color: var(--text-muted); flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .color-field input[type="color"]{
+    width: 28px;
+    height: 28px;
+    border: none;
+    border-radius: 50%;
+    padding:0;
+    background:none;
+    cursor:pointer;
+    flex-shrink:0;
+  }
+  .name-row{
+    display:flex;
+    gap:8px;
+  }
+  .name-field{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+  }
+  .name-field label{ font-size:11px; color: var(--text-muted); font-weight:700; }
+  .name-field input[type="text"]{
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 9px 10px;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 13.5px;
+    font-weight:700;
+    width:100%;
+  }
+  .settings-note{
+    font-size:11px;
+    color: var(--text-muted);
+    margin:0;
+    line-height:1.4;
+  }
+  .settings-footer{
+    display:flex;
+    gap:8px;
+    margin-top: 6px;
+  }
+  .settings-footer button{ flex:1; }
+
   [hidden]{ display:none !important; }
 </style>
 </head>
@@ -475,12 +719,33 @@
 <div class="app">
 
   <header>
-    <h1>Truco Paulista</h1>
-    <div class="wins">
-      <div class="win-pill a"><span id="winsLabelA">Nós</span> <b id="winsA">0</b></div>
-      <div class="win-pill b"><span id="winsLabelB">Eles</span> <b id="winsB">0</b></div>
+    <div class="title-row">
+      <button class="icon-btn" id="settingsBtn" aria-label="Personalizar painel" title="Personalizar painel">⚙</button>
+      <h1>Truco Paulista</h1>
+    </div>
+    <div class="header-right">
+      <div class="wins">
+        <div class="win-pill a"><span id="winsLabelA">Nós</span> <b id="winsA">0</b></div>
+        <div class="win-pill b"><span id="winsLabelB">Eles</span> <b id="winsB">0</b></div>
+      </div>
     </div>
   </header>
+
+  <div class="dealer-bar">
+    <div class="dealer-top">
+      <span class="dealer-label">Dá as cartas</span>
+      <button class="direction-btn" id="directionBtn" aria-label="Alternar sentido do rodízio">
+        <span class="arrow" id="directionArrow">⟳</span>
+        <span id="directionText">Horário</span>
+      </button>
+    </div>
+    <div class="dealer-seats" id="dealerSeats">
+      <button class="seat-chip a" data-seat="0"><span class="seat-suit">♠</span><span class="seat-name" id="seatName0">Nós 1</span></button>
+      <button class="seat-chip b" data-seat="1"><span class="seat-suit">♠</span><span class="seat-name" id="seatName1">Eles 1</span></button>
+      <button class="seat-chip a" data-seat="2"><span class="seat-suit">♠</span><span class="seat-name" id="seatName2">Nós 2</span></button>
+      <button class="seat-chip b" data-seat="3"><span class="seat-suit">♠</span><span class="seat-name" id="seatName3">Eles 2</span></button>
+    </div>
+  </div>
 
   <section class="scoreboard" aria-label="Placar">
     <div class="team team-a" data-team="A">
@@ -494,7 +759,7 @@
       </div>
     </div>
 
-    <div class="divider"><div class="coin">×</div></div>
+    <div class="divider"><div class="coin" id="logoSpot">×</div></div>
 
     <div class="team team-b" data-team="B">
       <span class="team-name" id="nameB" contenteditable="false" role="button" tabindex="0" aria-label="Editar nome do time Eles">Eles</span>
@@ -556,10 +821,96 @@
 <div class="overlay" id="confirmOverlay" hidden>
   <div class="overlay-card">
     <p class="confirm-title">Zerar tudo?</p>
-    <p class="confirm-body">Isso apaga o placar, o histórico e as partidas vencidas dos dois times. Não pode ser desfeito.</p>
+    <p class="confirm-body">Isso apaga o placar, o histórico e as partidas vencidas dos dois times. Os nomes e a personalização do painel continuam como estão. Não pode ser desfeito.</p>
     <div class="confirm-actions">
       <button class="secondary" id="confirmCancel">Cancelar</button>
       <button class="danger" id="confirmOk">Zerar tudo</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="settingsOverlay" hidden>
+  <div class="overlay-card settings-card">
+    <p class="settings-title">Personalizar painel</p>
+
+    <div class="settings-section">
+      <p class="settings-label">Logo no meio do placar</p>
+      <div class="logo-row">
+        <div class="logo-preview" id="logoPreview">sem logo</div>
+        <div class="file-btn-row">
+          <label for="logoInput">Escolher imagem</label>
+          <button type="button" id="removeLogoBtn">Remover</button>
+        </div>
+        <input type="file" id="logoInput" accept="image/*">
+      </div>
+      <p class="settings-note">A imagem fica salva só neste celular. Prefira arquivos pequenos (até ~1 MB).</p>
+    </div>
+
+    <div class="settings-section">
+      <p class="settings-label">Cor de fundo do painel</p>
+      <div class="color-field" style="max-width:180px;">
+        <span id="bgColorLabel">Padrão (verde escuro)</span>
+        <input type="color" id="bgColorInput" value="#0B1712">
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <p class="settings-label">Cor de cada time</p>
+      <div class="color-row">
+        <div class="color-field">
+          <span id="colorLabelA">Nós</span>
+          <input type="color" id="colorInputA" value="#C1462E">
+        </div>
+        <div class="color-field">
+          <span id="colorLabelB">Eles</span>
+          <input type="color" id="colorInputB" value="#3E8E96">
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <p class="settings-label">Nomes dos times</p>
+      <div class="name-row">
+        <div class="name-field">
+          <label for="nameInputA">Time 1</label>
+          <input type="text" id="nameInputA" maxlength="18" placeholder="Nós">
+        </div>
+        <div class="name-field">
+          <label for="nameInputB">Time 2</label>
+          <input type="text" id="nameInputB" maxlength="18" placeholder="Eles">
+        </div>
+      </div>
+      <button type="button" id="resetNamesBtn" class="secondary">Restaurar nomes (Nós / Eles)</button>
+    </div>
+
+    <div class="settings-section">
+      <p class="settings-label">Jogadores (ordem de dar cartas)</p>
+      <div class="name-row">
+        <div class="name-field">
+          <label for="playerInput0" id="playerLabel0">Nós 1</label>
+          <input type="text" id="playerInput0" maxlength="18" placeholder="Nós 1">
+        </div>
+        <div class="name-field">
+          <label for="playerInput1" id="playerLabel1">Eles 1</label>
+          <input type="text" id="playerInput1" maxlength="18" placeholder="Eles 1">
+        </div>
+      </div>
+      <div class="name-row">
+        <div class="name-field">
+          <label for="playerInput2" id="playerLabel2">Nós 2</label>
+          <input type="text" id="playerInput2" maxlength="18" placeholder="Nós 2">
+        </div>
+        <div class="name-field">
+          <label for="playerInput3" id="playerLabel3">Eles 2</label>
+          <input type="text" id="playerInput3" maxlength="18" placeholder="Eles 2">
+        </div>
+      </div>
+      <p class="settings-note">A ordem acima é a ordem física da mesa (dupla intercalada). O rodízio de quem dá as cartas segue essa ordem, no sentido escolhido.</p>
+    </div>
+
+    <div class="settings-footer">
+      <button type="button" class="secondary" id="resetVisualBtn">Restaurar cores e logo</button>
+      <button type="button" class="primary" id="closeSettingsBtn">Fechar</button>
     </div>
   </div>
 </div>
@@ -568,7 +919,14 @@
 (function(){
   "use strict";
 
-  var STORAGE_KEY = "trucoPaulistaState_v1";
+  var STORAGE_KEY = "trucoPaulistaState_v2";
+
+  var DEFAULT_BG = "#0B1712";
+  var DEFAULT_BG2 = "#0F1F18";
+  var DEFAULT_TEAM_A = "#C1462E";
+  var DEFAULT_TEAM_B = "#3E8E96";
+
+  var SEAT_TEAMS = ["A", "B", "A", "B"]; // fixed alternating seating: partners sit across, not side by side
 
   var defaultState = function(){
     return {
@@ -576,9 +934,26 @@
       scores: { A: 0, B: 0 },
       wins: { A: 0, B: 0 },
       stake: 1,
-      history: [] // { team, amount, label, scoreA, scoreB }
+      players: [null, null, null, null], // custom name per seat, or null to use the default "Time N"
+      dealerIndex: 0,
+      direction: "cw", // "cw" (horário) or "ccw" (anti-horário)
+      history: [], // { team, amount, label, scoreA, scoreB, dealerBefore }
+      theme: { logo: null, bg: null, teamA: null, teamB: null }
     };
   };
+
+  function seatDefaultName(i){
+    var team = SEAT_TEAMS[i];
+    var seatNumber = Math.floor(i / 2) + 1;
+    return state.names[team] + " " + seatNumber;
+  }
+  function seatName(i){
+    return (state.players[i] && state.players[i].trim()) ? state.players[i].trim() : seatDefaultName(i);
+  }
+  function advanceDealer(){
+    var step = state.direction === "cw" ? 1 : 3; // 3 === -1 mod 4
+    state.dealerIndex = (state.dealerIndex + step) % 4;
+  }
 
   var state = loadState();
 
@@ -588,12 +963,17 @@
       if(!raw) return defaultState();
       var parsed = JSON.parse(raw);
       var base = defaultState();
-      return Object.assign(base, parsed, {
+      var merged = Object.assign(base, parsed, {
         names: Object.assign(base.names, parsed.names || {}),
         scores: Object.assign(base.scores, parsed.scores || {}),
         wins: Object.assign(base.wins, parsed.wins || {}),
-        history: Array.isArray(parsed.history) ? parsed.history : []
+        history: Array.isArray(parsed.history) ? parsed.history : [],
+        theme: Object.assign(base.theme, parsed.theme || {}),
+        players: Array.isArray(parsed.players) && parsed.players.length === 4 ? parsed.players : base.players,
+        dealerIndex: (typeof parsed.dealerIndex === "number" && parsed.dealerIndex >= 0 && parsed.dealerIndex < 4) ? parsed.dealerIndex : 0,
+        direction: parsed.direction === "ccw" ? "ccw" : "cw"
       });
+      return merged;
     }catch(e){
       return defaultState();
     }
@@ -636,18 +1016,91 @@
     confirmCancel: document.getElementById("confirmCancel"),
     confirmOk: document.getElementById("confirmOk"),
     wakeDot: document.getElementById("wakeDot"),
-    wakeStatus: document.getElementById("wakeStatus")
+    wakeStatus: document.getElementById("wakeStatus"),
+    seatChips: Array.prototype.slice.call(document.querySelectorAll(".seat-chip")),
+    directionBtn: document.getElementById("directionBtn"),
+    directionArrow: document.getElementById("directionArrow"),
+    directionText: document.getElementById("directionText"),
+    playerInputs: [
+      document.getElementById("playerInput0"),
+      document.getElementById("playerInput1"),
+      document.getElementById("playerInput2"),
+      document.getElementById("playerInput3")
+    ],
+    playerLabels: [
+      document.getElementById("playerLabel0"),
+      document.getElementById("playerLabel1"),
+      document.getElementById("playerLabel2"),
+      document.getElementById("playerLabel3")
+    ],
+    logoSpot: document.getElementById("logoSpot"),
+    settingsBtn: document.getElementById("settingsBtn"),
+    settingsOverlay: document.getElementById("settingsOverlay"),
+    closeSettingsBtn: document.getElementById("closeSettingsBtn"),
+    logoInput: document.getElementById("logoInput"),
+    logoPreview: document.getElementById("logoPreview"),
+    removeLogoBtn: document.getElementById("removeLogoBtn"),
+    bgColorInput: document.getElementById("bgColorInput"),
+    bgColorLabel: document.getElementById("bgColorLabel"),
+    colorInputA: document.getElementById("colorInputA"),
+    colorInputB: document.getElementById("colorInputB"),
+    colorLabelA: document.getElementById("colorLabelA"),
+    colorLabelB: document.getElementById("colorLabelB"),
+    nameInputA: document.getElementById("nameInputA"),
+    nameInputB: document.getElementById("nameInputB"),
+    resetNamesBtn: document.getElementById("resetNamesBtn"),
+    resetVisualBtn: document.getElementById("resetVisualBtn")
   };
 
   var pointButtons = Array.prototype.slice.call(document.querySelectorAll(".point-btn"));
   var minusButtons = Array.prototype.slice.call(document.querySelectorAll(".mini"));
   var historyOpen = false;
 
+  // --- color helpers ---
+  function normalizeHex(hex){
+    hex = (hex || "").replace("#", "");
+    if(hex.length === 3) hex = hex.split("").map(function(c){ return c + c; }).join("");
+    return hex;
+  }
+  function shadeColor(hex, percent){
+    var h = normalizeHex(hex);
+    var num = parseInt(h, 16);
+    if(isNaN(num)) return hex;
+    var amt = Math.round(2.55 * percent);
+    var r = Math.min(255, Math.max(0, (num >> 16) + amt));
+    var g = Math.min(255, Math.max(0, ((num >> 8) & 0x00FF) + amt));
+    var b = Math.min(255, Math.max(0, (num & 0x0000FF) + amt));
+    return "#" + (0x1000000 + r * 0x10000 + g * 0x100 + b).toString(16).slice(1);
+  }
+
+  function applyTheme(){
+    var root = document.documentElement.style;
+    var bg = state.theme.bg || DEFAULT_BG;
+    var bg2 = state.theme.bg ? shadeColor(state.theme.bg, 6) : DEFAULT_BG2;
+    var teamA = state.theme.teamA || DEFAULT_TEAM_A;
+    var teamB = state.theme.teamB || DEFAULT_TEAM_B;
+
+    root.setProperty("--bg", bg);
+    root.setProperty("--bg-2", bg2);
+    root.setProperty("--team-a", teamA);
+    root.setProperty("--team-a-dim", shadeColor(teamA, -55));
+    root.setProperty("--team-b", teamB);
+    root.setProperty("--team-b-dim", shadeColor(teamB, -55));
+
+    if(state.theme.logo){
+      el.logoSpot.innerHTML = '<img src="' + state.theme.logo + '" alt="Logo">';
+    }else{
+      el.logoSpot.textContent = "×";
+    }
+  }
+
   function render(){
     el.nameA.textContent = state.names.A;
     el.nameB.textContent = state.names.B;
     el.winsLabelA.textContent = state.names.A;
     el.winsLabelB.textContent = state.names.B;
+    el.colorLabelA.textContent = state.names.A;
+    el.colorLabelB.textContent = state.names.B;
 
     el.scoreA.textContent = state.scores.A;
     el.scoreB.textContent = state.scores.B;
@@ -666,25 +1119,34 @@
       c.classList.toggle("active", Number(c.dataset.stake) === state.stake);
     });
 
+    el.seatChips.forEach(function(chip, i){
+      chip.querySelector(".seat-name").textContent = seatName(i);
+      chip.classList.toggle("active", state.dealerIndex === i);
+    });
+    var cw = state.direction === "cw";
+    el.directionArrow.textContent = cw ? "⟳" : "⟲";
+    el.directionText.textContent = cw ? "Horário" : "Anti-horário";
+
     pointButtons.forEach(function(b){ b.disabled = gameOver; });
     minusButtons.forEach(function(b){ b.disabled = gameOver; });
     el.undoBtn.disabled = state.history.length === 0;
 
+    applyTheme();
     renderHistory();
     saveState();
   }
 
   function renderHistory(){
     el.historyCount.textContent = state.history.length;
-    el.historyList.innerHTML = "";
     if(state.history.length === 0){
-      el.historyEmpty.hidden = !historyOpen ? true : false;
+      el.historyList.innerHTML = "";
       el.historyList.hidden = true;
-      if(historyOpen) el.historyEmpty.hidden = false; else el.historyEmpty.hidden = true;
+      el.historyEmpty.hidden = !historyOpen;
       return;
     }
     el.historyEmpty.hidden = true;
     el.historyList.hidden = !historyOpen;
+    el.historyList.innerHTML = "";
 
     var items = state.history.slice().reverse();
     items.forEach(function(entry){
@@ -719,19 +1181,22 @@
     scoreEl.classList.add("bump");
   }
 
-  // --- actions ---
+  // --- game actions ---
   function awardPoint(team){
     if(state.scores.A >= 12 || state.scores.B >= 12) return;
     var amount = state.stake;
+    var dealerBefore = state.dealerIndex;
     state.scores[team] += amount;
     state.history.push({
       team: team,
       amount: amount,
       label: stakeShort[amount] || (amount + " pts"),
       scoreA: state.scores.A,
-      scoreB: state.scores.B
+      scoreB: state.scores.B,
+      dealerBefore: dealerBefore
     });
     state.stake = 1;
+    advanceDealer();
     bump(team);
 
     if(state.scores[team] >= 12){
@@ -754,6 +1219,7 @@
     if(!last) return;
     state.scores[last.team] -= last.amount;
     if(state.scores[last.team] < 0) state.scores[last.team] = 0;
+    if(typeof last.dealerBefore === "number") state.dealerIndex = last.dealerBefore;
     render();
   }
 
@@ -767,8 +1233,21 @@
 
   function resetEverything(){
     var names = state.names;
+    var theme = state.theme;
+    var players = state.players;
     state = defaultState();
     state.names = names;
+    state.theme = theme;
+    state.players = players;
+    render();
+  }
+
+  function setDealerSeat(index){
+    state.dealerIndex = index;
+    render();
+  }
+  function toggleDirection(){
+    state.direction = state.direction === "cw" ? "ccw" : "cw";
     render();
   }
 
@@ -778,7 +1257,7 @@
     el.winOverlay.hidden = false;
   }
 
-  // --- events ---
+  // --- game events ---
   pointButtons.forEach(function(btn){
     btn.addEventListener("click", function(){ awardPoint(btn.dataset.team); });
   });
@@ -803,6 +1282,11 @@
     el.winOverlay.hidden = true;
     newMatch();
   });
+
+  el.seatChips.forEach(function(chip, i){
+    chip.addEventListener("click", function(){ setDealerSeat(i); });
+  });
+  el.directionBtn.addEventListener("click", toggleDirection);
 
   el.historyToggle.addEventListener("click", function(){
     historyOpen = !historyOpen;
@@ -832,6 +1316,106 @@
   makeNameEditable(el.nameA, "A");
   makeNameEditable(el.nameB, "B");
 
+  // --- settings modal ---
+  function openSettings(){
+    el.nameInputA.value = state.names.A;
+    el.nameInputB.value = state.names.B;
+    el.bgColorInput.value = state.theme.bg || DEFAULT_BG;
+    el.bgColorLabel.textContent = state.theme.bg ? state.theme.bg.toUpperCase() : "Padrão (verde escuro)";
+    el.colorInputA.value = state.theme.teamA || DEFAULT_TEAM_A;
+    el.colorInputB.value = state.theme.teamB || DEFAULT_TEAM_B;
+    for(var i = 0; i < 4; i++){
+      el.playerInputs[i].value = state.players[i] || "";
+      el.playerInputs[i].placeholder = seatDefaultName(i);
+      el.playerLabels[i].textContent = seatDefaultName(i);
+    }
+    updateLogoPreview();
+    el.settingsOverlay.hidden = false;
+  }
+  function closeSettings(){
+    el.settingsOverlay.hidden = true;
+  }
+  function updateLogoPreview(){
+    if(state.theme.logo){
+      el.logoPreview.innerHTML = '<img src="' + state.theme.logo + '" alt="Logo atual">';
+    }else{
+      el.logoPreview.innerHTML = "";
+      el.logoPreview.textContent = "sem logo";
+    }
+  }
+
+  el.settingsBtn.addEventListener("click", openSettings);
+  el.closeSettingsBtn.addEventListener("click", closeSettings);
+
+  el.logoInput.addEventListener("change", function(ev){
+    var file = ev.target.files && ev.target.files[0];
+    if(!file) return;
+    var reader = new FileReader();
+    reader.onload = function(){
+      state.theme.logo = reader.result;
+      updateLogoPreview();
+      render();
+    };
+    reader.readAsDataURL(file);
+    ev.target.value = "";
+  });
+
+  el.removeLogoBtn.addEventListener("click", function(){
+    state.theme.logo = null;
+    updateLogoPreview();
+    render();
+  });
+
+  el.bgColorInput.addEventListener("input", function(){
+    state.theme.bg = el.bgColorInput.value;
+    el.bgColorLabel.textContent = el.bgColorInput.value.toUpperCase();
+    render();
+  });
+  el.colorInputA.addEventListener("input", function(){
+    state.theme.teamA = el.colorInputA.value;
+    render();
+  });
+  el.colorInputB.addEventListener("input", function(){
+    state.theme.teamB = el.colorInputB.value;
+    render();
+  });
+
+  function commitNameInput(key, input, fallback){
+    var value = input.value.trim();
+    state.names[key] = value.length ? value.slice(0, 18) : fallback;
+    input.value = state.names[key];
+    render();
+  }
+  el.nameInputA.addEventListener("change", function(){ commitNameInput("A", el.nameInputA, "Nós"); });
+  el.nameInputB.addEventListener("change", function(){ commitNameInput("B", el.nameInputB, "Eles"); });
+
+  el.playerInputs.forEach(function(input, i){
+    input.addEventListener("change", function(){
+      var value = input.value.trim();
+      state.players[i] = value.length ? value.slice(0, 18) : null;
+      render();
+      input.placeholder = seatDefaultName(i);
+    });
+  });
+
+  el.resetNamesBtn.addEventListener("click", function(){
+    state.names.A = "Nós";
+    state.names.B = "Eles";
+    el.nameInputA.value = "Nós";
+    el.nameInputB.value = "Eles";
+    render();
+  });
+
+  el.resetVisualBtn.addEventListener("click", function(){
+    state.theme = { logo: null, bg: null, teamA: null, teamB: null };
+    el.bgColorInput.value = DEFAULT_BG;
+    el.bgColorLabel.textContent = "Padrão (verde escuro)";
+    el.colorInputA.value = DEFAULT_TEAM_A;
+    el.colorInputB.value = DEFAULT_TEAM_B;
+    updateLogoPreview();
+    render();
+  });
+
   // --- wake lock: keep screen on while scoring ---
   var wakeLock = null;
 
@@ -859,9 +1443,9 @@
   document.addEventListener("visibilitychange", function(){
     if(document.visibilityState === "visible") requestWakeLock();
   });
-  document.addEventListener("click", function once(){
+  document.addEventListener("click", function(){
     if(!wakeLock) requestWakeLock();
-  }, { once: false });
+  });
 
   requestWakeLock();
   render();
