@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0D1B14">
+<title>Placar de Truco Paulista</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700;9..144,900&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0B1712;
+    --bg-2: #0F1F18;
+    --surface: #142922;
+    --surface-2: #1B342B;
+    --border: #2B4A3D;
+    --gold: #D8A94D;
+    --gold-dim: #8A733C;
+    --team-a: #C1462E;
+    --team-a-dim: #6E3126;
+    --team-b: #3E8E96;
+    --team-b-dim: #275257;
+    --text: #EDE7D9;
+    --text-muted: #8FA396;
+    --danger: #C1462E;
+    --radius-lg: 22px;
+    --radius-md: 14px;
+    --radius-sm: 10px;
+    --font-display: "Fraunces", serif;
+    --font-body: "Manrope", sans-serif;
+  }
+
+  *{ box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html, body{
+    margin:0;
+    padding:0;
+    background: radial-gradient(120% 90% at 50% -10%, var(--bg-2) 0%, var(--bg) 60%);
+    color: var(--text);
+    font-family: var(--font-body);
+    min-height: 100dvh;
+  }
+
+  body{
+    display:flex;
+    justify-content:center;
+    padding: env(safe-area-inset-top, 16px) env(safe-area-inset-right, 12px) env(safe-area-inset-bottom, 16px) env(safe-area-inset-left, 12px);
+  }
+
+  .app{
+    width:100%;
+    max-width: 480px;
+    display:flex;
+    flex-direction:column;
+    gap: 14px;
+    padding-top: 6px;
+  }
+
+  button{
+    font-family: inherit;
+    border:none;
+    color: inherit;
+    cursor:pointer;
+    background:none;
+  }
+  button:focus-visible, [contenteditable]:focus-visible{
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+  }
+
+  /* header */
+  header{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:10px;
+    padding: 4px 2px;
+  }
+  header h1{
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(22px, 6vw, 26px);
+    margin:0;
+    letter-spacing: 0.2px;
+  }
+  .wins{
+    display:flex;
+    gap:6px;
+    flex-shrink:0;
+  }
+  .win-pill{
+    display:flex;
+    align-items:baseline;
+    gap:5px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 5px 10px;
+    font-size: 12.5px;
+    color: var(--text-muted);
+    white-space:nowrap;
+  }
+  .win-pill b{
+    font-family: var(--font-display);
+    font-size: 15px;
+    color: var(--text);
+    font-weight: 700;
+  }
+  .win-pill.a b{ color: var(--team-a); }
+  .win-pill.b b{ color: var(--team-b); }
+
+  /* scoreboard */
+  .scoreboard{
+    position:relative;
+    display:grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items:stretch;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 18px 8px 16px;
+    overflow:hidden;
+  }
+  .scoreboard::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:
+      repeating-linear-gradient(135deg, rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 1px, transparent 1px, transparent 8px);
+    pointer-events:none;
+  }
+  .team{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:10px;
+    padding: 0 6px;
+    min-width:0;
+  }
+  .team-name{
+    font-size: 13.5px;
+    font-weight:700;
+    color: var(--text-muted);
+    padding: 4px 10px;
+    border-radius: 999px;
+    max-width: 100%;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    border: 1px dashed transparent;
+  }
+  .team-name:hover, .team-name:focus{
+    border-color: var(--border);
+  }
+  .team-a .team-name{ color: var(--team-a); }
+  .team-b .team-name{ color: var(--team-b); }
+  .team-name[contenteditable="true"]{
+    white-space:normal;
+    outline: none;
+    border-color: var(--gold);
+    background: var(--surface-2);
+  }
+
+  .score{
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(58px, 20vw, 84px);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    transition: transform 0.15s ease;
+  }
+  .score.bump{ transform: scale(1.12); }
+
+  .mao11{
+    font-size: 11.5px;
+    font-weight:700;
+    color: var(--bg);
+    background: var(--gold);
+    padding: 3px 9px;
+    border-radius: 999px;
+    letter-spacing:0.2px;
+  }
+  .mao11-spacer{ height: 21px; }
+
+  .mini-controls{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    width:100%;
+    justify-content:center;
+  }
+  .point-btn{
+    flex:1;
+    max-width: 132px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 12px 6px;
+    font-weight: 700;
+    font-size: 14px;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+  .team-a .point-btn:active{ background: var(--team-a-dim); border-color: var(--team-a); }
+  .team-b .point-btn:active{ background: var(--team-b-dim); border-color: var(--team-b); }
+  .point-btn:disabled{ opacity:0.4; }
+
+  .mini{
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    font-size: 16px;
+    font-weight:700;
+    color: var(--text-muted);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+  }
+  .mini:disabled{ opacity: 0.35; }
+
+  .divider{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding: 0 2px;
+  }
+  .coin{
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 1.5px dashed var(--gold-dim);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family: var(--font-display);
+    color: var(--gold);
+    font-weight:700;
+    font-size: 15px;
+    margin-top: 30px;
+  }
+
+  /* stake */
+  .stake{
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 14px 14px 16px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .stake-label{
+    margin:0;
+    font-size: 14px;
+    color: var(--text-muted);
+    text-align:center;
+  }
+  .stake-label b{
+    color: var(--gold);
+    font-family: var(--font-display);
+    font-size: 17px;
+    font-weight:700;
+  }
+  .stake-chips{
+    display:grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+  }
+  .chip{
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 10px 2px;
+    font-size: 12.5px;
+    font-weight:700;
+    color: var(--text-muted);
+    text-align:center;
+  }
+  .chip.active{
+    background: var(--gold);
+    border-color: var(--gold);
+    color: #241C0C;
+  }
+
+  /* actions */
+  .actions{
+    display:grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+  }
+  .actions button{
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 11px 4px;
+    font-size: 12.5px;
+    font-weight:700;
+    color: var(--text-muted);
+  }
+  .actions button:disabled{ opacity:0.35; }
+  #resetAllBtn{ color: var(--team-a); }
+
+  /* history */
+  .history{
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow:hidden;
+  }
+  .history-toggle{
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding: 13px 16px;
+    font-weight:700;
+    font-size: 14px;
+  }
+  .history-toggle .count{
+    background: var(--surface-2);
+    border-radius: 999px;
+    padding: 2px 9px;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .history-toggle .chevron{
+    color: var(--text-muted);
+    transition: transform 0.15s ease;
+  }
+  .history-toggle.open .chevron{ transform: rotate(180deg); }
+  #historyList{
+    list-style:none;
+    margin:0;
+    padding: 0 14px 14px;
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    max-height: 260px;
+    overflow-y:auto;
+  }
+  #historyList li{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    padding: 9px 10px;
+    background: var(--surface-2);
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+  }
+  #historyList .dot{
+    width:8px; height:8px;
+    border-radius:50%;
+    flex-shrink:0;
+  }
+  #historyList li.a .dot{ background: var(--team-a); }
+  #historyList li.b .dot{ background: var(--team-b); }
+  #historyList .htext{ flex:1; color: var(--text); }
+  #historyList .htext b{ font-weight:800; }
+  #historyList .hscore{
+    font-family: var(--font-display);
+    font-weight:700;
+    color: var(--text-muted);
+    font-size: 12.5px;
+    flex-shrink:0;
+  }
+  .history-empty{
+    color: var(--text-muted);
+    font-size: 13px;
+    padding: 0 14px 16px;
+    margin:0;
+  }
+
+  footer{
+    text-align:center;
+    font-size: 11.5px;
+    color: var(--text-muted);
+    padding: 2px 0 10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+  }
+  footer .wdot{
+    width:6px; height:6px; border-radius:50%;
+    background: var(--gold-dim);
+  }
+  footer .wdot.on{ background: #6FCB7C; }
+
+  /* overlays */
+  .overlay{
+    position:fixed;
+    inset:0;
+    background: rgba(5,10,8,0.72);
+    backdrop-filter: blur(2px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding: 24px;
+    z-index: 20;
+  }
+  .overlay-card{
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 28px 24px;
+    max-width: 340px;
+    width:100%;
+    text-align:center;
+    display:flex;
+    flex-direction:column;
+    gap: 10px;
+  }
+  .win-title{
+    font-family: var(--font-display);
+    font-size: 15px;
+    letter-spacing: 0.3px;
+    color: var(--gold);
+    margin:0;
+  }
+  .win-team{
+    font-family: var(--font-display);
+    font-size: 30px;
+    font-weight: 800;
+    margin: 2px 0 6px;
+  }
+  .win-sub{
+    color: var(--text-muted);
+    font-size: 13.5px;
+    margin: 0 0 10px;
+  }
+  .overlay-card button{
+    background: var(--gold);
+    color: #241C0C;
+    font-weight:800;
+    border-radius: var(--radius-md);
+    padding: 13px;
+    font-size: 14.5px;
+  }
+  .overlay-card .secondary{
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    font-weight:700;
+    margin-top:4px;
+  }
+  .confirm-title{
+    font-family: var(--font-display);
+    font-size: 19px;
+    font-weight:700;
+    margin:0;
+  }
+  .confirm-body{
+    color: var(--text-muted);
+    font-size: 13.5px;
+    line-height:1.5;
+    margin: 2px 0 8px;
+  }
+  .confirm-actions{
+    display:flex;
+    gap:8px;
+  }
+  .confirm-actions button{ flex:1; }
+  .confirm-actions .danger{
+    background: var(--team-a);
+    color: #FCEEEA;
+  }
+
+  [hidden]{ display:none !important; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header>
+    <h1>Truco Paulista</h1>
+    <div class="wins">
+      <div class="win-pill a"><span id="winsLabelA">Nós</span> <b id="winsA">0</b></div>
+      <div class="win-pill b"><span id="winsLabelB">Eles</span> <b id="winsB">0</b></div>
+    </div>
+  </header>
+
+  <section class="scoreboard" aria-label="Placar">
+    <div class="team team-a" data-team="A">
+      <span class="team-name" id="nameA" contenteditable="false" role="button" tabindex="0" aria-label="Editar nome do time Nós">Nós</span>
+      <div class="score" id="scoreA">0</div>
+      <div class="mao11" id="mao11A" hidden>Mão de 11</div>
+      <div class="mao11-spacer" id="spacerA"></div>
+      <div class="mini-controls">
+        <button class="mini" data-action="minus" data-team="A" aria-label="Remover um ponto de Nós">−1</button>
+        <button class="point-btn" data-team="A">Ganhou a mão</button>
+      </div>
+    </div>
+
+    <div class="divider"><div class="coin">×</div></div>
+
+    <div class="team team-b" data-team="B">
+      <span class="team-name" id="nameB" contenteditable="false" role="button" tabindex="0" aria-label="Editar nome do time Eles">Eles</span>
+      <div class="score" id="scoreB">0</div>
+      <div class="mao11" id="mao11B" hidden>Mão de 11</div>
+      <div class="mao11-spacer" id="spacerB"></div>
+      <div class="mini-controls">
+        <button class="point-btn" data-team="B">Ganhou a mão</button>
+        <button class="mini" data-action="minus" data-team="B" aria-label="Remover um ponto de Eles">−1</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="stake" aria-label="Valor da mão">
+    <p class="stake-label">Vale <b id="stakeValue">1 ponto</b></p>
+    <div class="stake-chips" role="group" aria-label="Escolher valor da mão">
+      <button class="chip active" data-stake="1">Mão</button>
+      <button class="chip" data-stake="3">Truco</button>
+      <button class="chip" data-stake="6">Seis</button>
+      <button class="chip" data-stake="9">Nove</button>
+      <button class="chip" data-stake="12">Doze</button>
+    </div>
+  </section>
+
+  <section class="actions">
+    <button id="undoBtn" disabled>Desfazer</button>
+    <button id="newMatchBtn">Nova partida</button>
+    <button id="resetAllBtn">Zerar tudo</button>
+  </section>
+
+  <section class="history">
+    <button class="history-toggle" id="historyToggle" aria-expanded="false">
+      <span>Histórico</span>
+      <span style="display:flex; align-items:center; gap:8px;">
+        <span class="count" id="historyCount">0</span>
+        <span class="chevron">▾</span>
+      </span>
+    </button>
+    <p class="history-empty" id="historyEmpty" hidden>Marque o primeiro ponto para começar o histórico.</p>
+    <ul id="historyList" hidden></ul>
+  </section>
+
+  <footer>
+    <span class="wdot" id="wakeDot"></span>
+    <span id="wakeStatus">Verificando a tela ativa…</span>
+  </footer>
+
+</div>
+
+<div class="overlay" id="winOverlay" hidden>
+  <div class="overlay-card">
+    <p class="win-title">Vitória!</p>
+    <p class="win-team" id="winTeamName">Nós</p>
+    <p class="win-sub">fecharam a partida em 12 pontos.</p>
+    <button id="winContinue">Começar nova partida</button>
+  </div>
+</div>
+
+<div class="overlay" id="confirmOverlay" hidden>
+  <div class="overlay-card">
+    <p class="confirm-title">Zerar tudo?</p>
+    <p class="confirm-body">Isso apaga o placar, o histórico e as partidas vencidas dos dois times. Não pode ser desfeito.</p>
+    <div class="confirm-actions">
+      <button class="secondary" id="confirmCancel">Cancelar</button>
+      <button class="danger" id="confirmOk">Zerar tudo</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var STORAGE_KEY = "trucoPaulistaState_v1";
+
+  var defaultState = function(){
+    return {
+      names: { A: "Nós", B: "Eles" },
+      scores: { A: 0, B: 0 },
+      wins: { A: 0, B: 0 },
+      stake: 1,
+      history: [] // { team, amount, label, scoreA, scoreB }
+    };
+  };
+
+  var state = loadState();
+
+  function loadState(){
+    try{
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if(!raw) return defaultState();
+      var parsed = JSON.parse(raw);
+      var base = defaultState();
+      return Object.assign(base, parsed, {
+        names: Object.assign(base.names, parsed.names || {}),
+        scores: Object.assign(base.scores, parsed.scores || {}),
+        wins: Object.assign(base.wins, parsed.wins || {}),
+        history: Array.isArray(parsed.history) ? parsed.history : []
+      });
+    }catch(e){
+      return defaultState();
+    }
+  }
+
+  function saveState(){
+    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }catch(e){}
+  }
+
+  var stakeLabels = { 1: "1 ponto", 3: "3 (truco)", 6: "6 (seis)", 9: "9 (nove)", 12: "12 (doze)" };
+  var stakeShort = { 1: "mão", 3: "truco", 6: "seis", 9: "nove", 12: "doze" };
+
+  // --- element refs ---
+  var el = {
+    nameA: document.getElementById("nameA"),
+    nameB: document.getElementById("nameB"),
+    scoreA: document.getElementById("scoreA"),
+    scoreB: document.getElementById("scoreB"),
+    mao11A: document.getElementById("mao11A"),
+    mao11B: document.getElementById("mao11B"),
+    spacerA: document.getElementById("spacerA"),
+    spacerB: document.getElementById("spacerB"),
+    winsA: document.getElementById("winsA"),
+    winsB: document.getElementById("winsB"),
+    winsLabelA: document.getElementById("winsLabelA"),
+    winsLabelB: document.getElementById("winsLabelB"),
+    stakeValue: document.getElementById("stakeValue"),
+    chips: Array.prototype.slice.call(document.querySelectorAll(".chip")),
+    undoBtn: document.getElementById("undoBtn"),
+    newMatchBtn: document.getElementById("newMatchBtn"),
+    resetAllBtn: document.getElementById("resetAllBtn"),
+    historyToggle: document.getElementById("historyToggle"),
+    historyCount: document.getElementById("historyCount"),
+    historyList: document.getElementById("historyList"),
+    historyEmpty: document.getElementById("historyEmpty"),
+    winOverlay: document.getElementById("winOverlay"),
+    winTeamName: document.getElementById("winTeamName"),
+    winContinue: document.getElementById("winContinue"),
+    confirmOverlay: document.getElementById("confirmOverlay"),
+    confirmCancel: document.getElementById("confirmCancel"),
+    confirmOk: document.getElementById("confirmOk"),
+    wakeDot: document.getElementById("wakeDot"),
+    wakeStatus: document.getElementById("wakeStatus")
+  };
+
+  var pointButtons = Array.prototype.slice.call(document.querySelectorAll(".point-btn"));
+  var minusButtons = Array.prototype.slice.call(document.querySelectorAll(".mini"));
+  var historyOpen = false;
+
+  function render(){
+    el.nameA.textContent = state.names.A;
+    el.nameB.textContent = state.names.B;
+    el.winsLabelA.textContent = state.names.A;
+    el.winsLabelB.textContent = state.names.B;
+
+    el.scoreA.textContent = state.scores.A;
+    el.scoreB.textContent = state.scores.B;
+    el.winsA.textContent = state.wins.A;
+    el.winsB.textContent = state.wins.B;
+
+    var gameOver = state.scores.A >= 12 || state.scores.B >= 12;
+
+    el.mao11A.hidden = !(state.scores.A === 11 && !gameOver);
+    el.mao11B.hidden = !(state.scores.B === 11 && !gameOver);
+    el.spacerA.hidden = !el.mao11A.hidden;
+    el.spacerB.hidden = !el.mao11B.hidden;
+
+    el.stakeValue.textContent = stakeLabels[state.stake];
+    el.chips.forEach(function(c){
+      c.classList.toggle("active", Number(c.dataset.stake) === state.stake);
+    });
+
+    pointButtons.forEach(function(b){ b.disabled = gameOver; });
+    minusButtons.forEach(function(b){ b.disabled = gameOver; });
+    el.undoBtn.disabled = state.history.length === 0;
+
+    renderHistory();
+    saveState();
+  }
+
+  function renderHistory(){
+    el.historyCount.textContent = state.history.length;
+    el.historyList.innerHTML = "";
+    if(state.history.length === 0){
+      el.historyEmpty.hidden = !historyOpen ? true : false;
+      el.historyList.hidden = true;
+      if(historyOpen) el.historyEmpty.hidden = false; else el.historyEmpty.hidden = true;
+      return;
+    }
+    el.historyEmpty.hidden = true;
+    el.historyList.hidden = !historyOpen;
+
+    var items = state.history.slice().reverse();
+    items.forEach(function(entry){
+      var li = document.createElement("li");
+      li.className = entry.team === "A" ? "a" : "b";
+      var teamName = entry.team === "A" ? state.names.A : state.names.B;
+      var dot = document.createElement("span");
+      dot.className = "dot";
+      var text = document.createElement("span");
+      text.className = "htext";
+      text.innerHTML = "<b>" + escapeHtml(teamName) + "</b> ganhou " + entry.amount + (entry.amount === 1 ? " ponto" : " pontos") + " (" + entry.label + ")";
+      var sc = document.createElement("span");
+      sc.className = "hscore";
+      sc.textContent = entry.scoreA + "–" + entry.scoreB;
+      li.appendChild(dot);
+      li.appendChild(text);
+      li.appendChild(sc);
+      el.historyList.appendChild(li);
+    });
+  }
+
+  function escapeHtml(s){
+    var d = document.createElement("div");
+    d.textContent = s;
+    return d.innerHTML;
+  }
+
+  function bump(team){
+    var scoreEl = team === "A" ? el.scoreA : el.scoreB;
+    scoreEl.classList.remove("bump");
+    void scoreEl.offsetWidth;
+    scoreEl.classList.add("bump");
+  }
+
+  // --- actions ---
+  function awardPoint(team){
+    if(state.scores.A >= 12 || state.scores.B >= 12) return;
+    var amount = state.stake;
+    state.scores[team] += amount;
+    state.history.push({
+      team: team,
+      amount: amount,
+      label: stakeShort[amount] || (amount + " pts"),
+      scoreA: state.scores.A,
+      scoreB: state.scores.B
+    });
+    state.stake = 1;
+    bump(team);
+
+    if(state.scores[team] >= 12){
+      state.wins[team] += 1;
+      render();
+      showWin(team);
+      return;
+    }
+    render();
+  }
+
+  function removePoint(team){
+    if(state.scores[team] <= 0) return;
+    state.scores[team] -= 1;
+    render();
+  }
+
+  function undo(){
+    var last = state.history.pop();
+    if(!last) return;
+    state.scores[last.team] -= last.amount;
+    if(state.scores[last.team] < 0) state.scores[last.team] = 0;
+    render();
+  }
+
+  function newMatch(){
+    state.scores = { A: 0, B: 0 };
+    state.history = [];
+    state.stake = 1;
+    el.winOverlay.hidden = true;
+    render();
+  }
+
+  function resetEverything(){
+    var names = state.names;
+    state = defaultState();
+    state.names = names;
+    render();
+  }
+
+  function showWin(team){
+    el.winTeamName.textContent = state.names[team];
+    el.winTeamName.style.color = team === "A" ? "var(--team-a)" : "var(--team-b)";
+    el.winOverlay.hidden = false;
+  }
+
+  // --- events ---
+  pointButtons.forEach(function(btn){
+    btn.addEventListener("click", function(){ awardPoint(btn.dataset.team); });
+  });
+  minusButtons.forEach(function(btn){
+    btn.addEventListener("click", function(){ removePoint(btn.dataset.team); });
+  });
+  el.chips.forEach(function(chip){
+    chip.addEventListener("click", function(){
+      state.stake = Number(chip.dataset.stake);
+      render();
+    });
+  });
+  el.undoBtn.addEventListener("click", undo);
+  el.newMatchBtn.addEventListener("click", newMatch);
+  el.resetAllBtn.addEventListener("click", function(){ el.confirmOverlay.hidden = false; });
+  el.confirmCancel.addEventListener("click", function(){ el.confirmOverlay.hidden = true; });
+  el.confirmOk.addEventListener("click", function(){
+    el.confirmOverlay.hidden = true;
+    resetEverything();
+  });
+  el.winContinue.addEventListener("click", function(){
+    el.winOverlay.hidden = true;
+    newMatch();
+  });
+
+  el.historyToggle.addEventListener("click", function(){
+    historyOpen = !historyOpen;
+    el.historyToggle.classList.toggle("open", historyOpen);
+    el.historyToggle.setAttribute("aria-expanded", String(historyOpen));
+    renderHistory();
+  });
+
+  function makeNameEditable(nameEl, key){
+    function commit(){
+      nameEl.contentEditable = "false";
+      var value = nameEl.textContent.trim();
+      state.names[key] = value.length ? value.slice(0, 18) : (key === "A" ? "Nós" : "Eles");
+      render();
+    }
+    nameEl.addEventListener("click", function(){
+      if(nameEl.contentEditable === "true") return;
+      nameEl.contentEditable = "true";
+      nameEl.focus();
+      document.execCommand && document.execCommand("selectAll", false, null);
+    });
+    nameEl.addEventListener("keydown", function(ev){
+      if(ev.key === "Enter"){ ev.preventDefault(); nameEl.blur(); }
+    });
+    nameEl.addEventListener("blur", commit);
+  }
+  makeNameEditable(el.nameA, "A");
+  makeNameEditable(el.nameB, "B");
+
+  // --- wake lock: keep screen on while scoring ---
+  var wakeLock = null;
+
+  function setWakeStatus(active, message){
+    el.wakeDot.classList.toggle("on", !!active);
+    el.wakeStatus.textContent = message;
+  }
+
+  function requestWakeLock(){
+    if(!("wakeLock" in navigator)){
+      setWakeStatus(false, "Ative manualmente a opção de não desligar a tela do seu celular.");
+      return;
+    }
+    navigator.wakeLock.request("screen").then(function(lock){
+      wakeLock = lock;
+      setWakeStatus(true, "Tela mantida ativa");
+      wakeLock.addEventListener("release", function(){
+        setWakeStatus(false, "A tela pode desligar sozinha agora");
+      });
+    }).catch(function(){
+      setWakeStatus(false, "Toque na tela para manter ela ativa");
+    });
+  }
+
+  document.addEventListener("visibilitychange", function(){
+    if(document.visibilityState === "visible") requestWakeLock();
+  });
+  document.addEventListener("click", function once(){
+    if(!wakeLock) requestWakeLock();
+  }, { once: false });
+
+  requestWakeLock();
+  render();
+})();
+</script>
+</body>
+</html>
