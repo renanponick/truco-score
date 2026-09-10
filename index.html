@@ -400,6 +400,134 @@
     color: #241C0C;
   }
 
+  /* hand end (cangou / correu) */
+  .hand-end{
+    display:grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 6px;
+  }
+  .hand-end button{
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 10px 4px;
+    font-size: 12px;
+    font-weight:700;
+    color: var(--text-muted);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:2px;
+    min-width:0;
+  }
+  .hand-end button:disabled{ opacity:0.35; }
+  .hand-end button small{
+    font-size: 10.5px;
+    font-weight:600;
+    opacity: 0.7;
+    max-width:100%;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+  .hand-end .ran-a small{ color: var(--team-a); opacity:1; }
+  .hand-end .ran-b small{ color: var(--team-b); opacity:1; }
+
+  /* narrator */
+  .narrator{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 6px;
+  }
+  .narrator.off .narr-chips{ opacity: 0.4; }
+  .narr-power{
+    width: 38px;
+    height: 38px;
+    border-radius: var(--radius-sm);
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    font-size: 15px;
+    flex-shrink:0;
+    line-height:1;
+  }
+  .narr-power[aria-pressed="true"]{
+    border-color: var(--gold-dim);
+    color: var(--gold);
+  }
+  .narr-chips{
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 5px;
+    flex:1;
+    min-width:0;
+    transition: opacity 0.15s ease;
+  }
+  .narr-chip{
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 9px 2px;
+    font-size: 11.5px;
+    font-weight:700;
+    color: var(--text-muted);
+    text-align:center;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+  .narr-chip.active{
+    background: var(--gold);
+    border-color: var(--gold);
+    color: #241C0C;
+  }
+  .narr-chip.chosen{
+    border-color: var(--gold);
+  }
+
+  .volume-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .volume-row input[type="range"]{
+    flex:1;
+    accent-color: var(--gold);
+    background: transparent;
+  }
+  .volume-row span{
+    font-size:12px;
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+    width: 38px;
+    text-align:right;
+  }
+  .toggle-row{
+    display:flex;
+    gap:8px;
+  }
+  .toggle-row button{
+    flex:1;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 10px 6px;
+    font-size: 12.5px;
+    font-weight:700;
+    color: var(--text-muted);
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+  .toggle-row button.active{
+    background: var(--gold);
+    border-color: var(--gold);
+    color: #241C0C;
+  }
+
   /* actions */
   .actions{
     display:grid;
@@ -472,6 +600,7 @@
   }
   #historyList li.a .dot{ background: var(--team-a); }
   #historyList li.b .dot{ background: var(--team-b); }
+  #historyList li.n .dot{ background: var(--gold-dim); }
   #historyList .htext{ flex:1; color: var(--text); }
   #historyList .htext b{ font-weight:800; }
   #historyList .hscore{
@@ -784,6 +913,22 @@
     </div>
   </section>
 
+  <section class="hand-end" aria-label="Mão encerrada sem disputa">
+    <button id="cangouBtn">Cangou<small>ninguém pontua</small></button>
+    <button class="ran-a" id="ranA">Correu<small id="ranNameA">Nós</small></button>
+    <button class="ran-b" id="ranB">Correu<small id="ranNameB">Eles</small></button>
+  </section>
+
+  <section class="narrator" id="narrator" aria-label="Narrador">
+    <button class="narr-power" id="audioToggle" aria-pressed="true" aria-label="Ligar ou desligar o narrador" title="Ligar ou desligar o narrador">🔊</button>
+    <div class="narr-chips" role="group" aria-label="Estilo do narrador">
+      <button class="narr-chip" data-persona="serio">Sério</button>
+      <button class="narr-chip" data-persona="comico">Cômico</button>
+      <button class="narr-chip" data-persona="bar_leve">Bar</button>
+      <button class="narr-chip" data-persona="bar">Bar 18+</button>
+    </div>
+  </section>
+
   <section class="actions">
     <button id="undoBtn" disabled>Desfazer</button>
     <button id="newMatchBtn">Nova partida</button>
@@ -820,8 +965,8 @@
 
 <div class="overlay" id="confirmOverlay" hidden>
   <div class="overlay-card">
-    <p class="confirm-title">Zerar tudo?</p>
-    <p class="confirm-body">Isso apaga o placar, o histórico e as partidas vencidas dos dois times. Os nomes e a personalização do painel continuam como estão. Não pode ser desfeito.</p>
+    <p class="confirm-title" id="confirmTitle">Zerar tudo?</p>
+    <p class="confirm-body" id="confirmBody">Isso apaga o placar, o histórico e as partidas vencidas dos dois times. Os nomes e a personalização do painel continuam como estão. Não pode ser desfeito.</p>
     <div class="confirm-actions">
       <button class="secondary" id="confirmCancel">Cancelar</button>
       <button class="danger" id="confirmOk">Zerar tudo</button>
@@ -832,6 +977,21 @@
 <div class="overlay" id="settingsOverlay" hidden>
   <div class="overlay-card settings-card">
     <p class="settings-title">Personalizar painel</p>
+
+    <div class="settings-section">
+      <p class="settings-label">Narrador</p>
+      <div class="volume-row">
+        <label for="volumeInput" style="font-size:12px; color:var(--text-muted); font-weight:700;">Volume</label>
+        <input type="range" id="volumeInput" min="0" max="100" step="5" value="90">
+        <span id="volumeLabel">90%</span>
+      </div>
+      <p class="settings-label" style="margin-top:2px;">Quem é o seu time</p>
+      <div class="toggle-row" role="group" aria-label="Escolher o seu time">
+        <button type="button" id="myTeamA" data-team="A">Nós</button>
+        <button type="button" id="myTeamB" data-team="B">Eles</button>
+      </div>
+      <p class="settings-note">O narrador comemora a vitória do time escolhido aqui e lamenta a derrota dele. O estilo da voz troca a qualquer momento na barra do narrador, na tela principal.</p>
+    </div>
 
     <div class="settings-section">
       <p class="settings-label">Logo no meio do placar</p>
@@ -937,8 +1097,15 @@
       players: [null, null, null, null], // custom name per seat, or null to use the default "Time N"
       dealerIndex: 0,
       direction: "cw", // "cw" (horário) or "ccw" (anti-horário)
-      history: [], // { team, amount, label, scoreA, scoreB, dealerBefore }
-      theme: { logo: null, bg: null, teamA: null, teamB: null }
+      history: [], // { team, amount, label, kind, scoreA, scoreB, dealerBefore }
+      theme: { logo: null, bg: null, teamA: null, teamB: null },
+      audio: {
+        on: true,
+        persona: "comico",
+        volume: 0.9,
+        adultOk: false, // o aviso de linguagem adulta já foi aceito
+        myTeam: "A"     // de quem é a vitória e de quem é a derrota, para o narrador
+      }
     };
   };
 
@@ -969,6 +1136,7 @@
         wins: Object.assign(base.wins, parsed.wins || {}),
         history: Array.isArray(parsed.history) ? parsed.history : [],
         theme: Object.assign(base.theme, parsed.theme || {}),
+        audio: Object.assign(base.audio, parsed.audio || {}),
         players: Array.isArray(parsed.players) && parsed.players.length === 4 ? parsed.players : base.players,
         dealerIndex: (typeof parsed.dealerIndex === "number" && parsed.dealerIndex >= 0 && parsed.dealerIndex < 4) ? parsed.dealerIndex : 0,
         direction: parsed.direction === "ccw" ? "ccw" : "cw"
@@ -1015,6 +1183,19 @@
     confirmOverlay: document.getElementById("confirmOverlay"),
     confirmCancel: document.getElementById("confirmCancel"),
     confirmOk: document.getElementById("confirmOk"),
+    confirmTitle: document.getElementById("confirmTitle"),
+    confirmBody: document.getElementById("confirmBody"),
+    cangouBtn: document.getElementById("cangouBtn"),
+    ranA: document.getElementById("ranA"),
+    ranB: document.getElementById("ranB"),
+    ranNameA: document.getElementById("ranNameA"),
+    ranNameB: document.getElementById("ranNameB"),
+    narrator: document.getElementById("narrator"),
+    audioToggle: document.getElementById("audioToggle"),
+    narrChips: Array.prototype.slice.call(document.querySelectorAll(".narr-chip")),
+    volumeInput: document.getElementById("volumeInput"),
+    volumeLabel: document.getElementById("volumeLabel"),
+    myTeamButtons: [document.getElementById("myTeamA"), document.getElementById("myTeamB")],
     wakeDot: document.getElementById("wakeDot"),
     wakeStatus: document.getElementById("wakeStatus"),
     seatChips: Array.prototype.slice.call(document.querySelectorAll(".seat-chip")),
@@ -1129,7 +1310,27 @@
 
     pointButtons.forEach(function(b){ b.disabled = gameOver; });
     minusButtons.forEach(function(b){ b.disabled = gameOver; });
+    el.cangouBtn.disabled = gameOver;
+    el.ranA.disabled = gameOver;
+    el.ranB.disabled = gameOver;
+    el.ranNameA.textContent = state.names.A;
+    el.ranNameB.textContent = state.names.B;
     el.undoBtn.disabled = state.history.length === 0;
+
+    el.narrator.classList.toggle("off", !state.audio.on);
+    el.audioToggle.textContent = state.audio.on ? "🔊" : "🔇";
+    el.audioToggle.setAttribute("aria-pressed", String(state.audio.on));
+    el.narrChips.forEach(function(chip){
+      var mine = chip.dataset.persona === state.audio.persona;
+      chip.classList.toggle("active", mine && state.audio.on);
+      chip.classList.toggle("chosen", mine && !state.audio.on);
+    });
+    el.volumeInput.value = Math.round(state.audio.volume * 100);
+    el.volumeLabel.textContent = Math.round(state.audio.volume * 100) + "%";
+    el.myTeamButtons.forEach(function(btn){
+      btn.textContent = state.names[btn.dataset.team];
+      btn.classList.toggle("active", state.audio.myTeam === btn.dataset.team);
+    });
 
     applyTheme();
     renderHistory();
@@ -1151,13 +1352,17 @@
     var items = state.history.slice().reverse();
     items.forEach(function(entry){
       var li = document.createElement("li");
-      li.className = entry.team === "A" ? "a" : "b";
-      var teamName = entry.team === "A" ? state.names.A : state.names.B;
+      li.className = entry.team ? (entry.team === "A" ? "a" : "b") : "n";
       var dot = document.createElement("span");
       dot.className = "dot";
       var text = document.createElement("span");
       text.className = "htext";
-      text.innerHTML = "<b>" + escapeHtml(teamName) + "</b> ganhou " + entry.amount + (entry.amount === 1 ? " ponto" : " pontos") + " (" + entry.label + ")";
+      if(entry.team){
+        var teamName = entry.team === "A" ? state.names.A : state.names.B;
+        text.innerHTML = "<b>" + escapeHtml(teamName) + "</b> ganhou " + entry.amount + (entry.amount === 1 ? " ponto" : " pontos") + " (" + entry.label + ")";
+      }else{
+        text.innerHTML = "<b>Cangou</b> — ninguém pontuou";
+      }
       var sc = document.createElement("span");
       sc.className = "hscore";
       sc.textContent = entry.scoreA + "–" + entry.scoreB;
@@ -1181,45 +1386,246 @@
     scoreEl.classList.add("bump");
   }
 
+  // --- narrator ---------------------------------------------------------
+  // Clipes pré-gerados em audios/<persona>/<evento>_NN.mp3. Nada de API em
+  // tempo de jogo: são arquivos estáticos, tocam offline e sem custo.
+  var AUDIO_DIR = "audios/";
+  var NARRATOR_EVENTS = [
+    "inicio", "mao_de_onze", "mao_escura", "truco", "seis", "nove", "doze",
+    "correu", "cangou", "mao_vencida", "vitoria", "derrota", "placar_apertado"
+  ];
+  var PERSONA_IDS = ["serio", "comico", "bar_leve", "bar"];
+  var ADULT_PERSONAS = { bar: true };
+  var VARIANTS = 3;
+  var STAKE_EVENT = { 3: "truco", 6: "seis", 9: "nove", 12: "doze" };
+
+  // Mapa evento -> persona -> arquivos. Vale como fallback quando o
+  // manifest.json não pode ser lido (abrir o index.html direto do disco
+  // bloqueia o fetch), e é substituído por ele quando a leitura funciona.
+  var clips = (function(){
+    var map = {};
+    NARRATOR_EVENTS.forEach(function(ev){
+      map[ev] = {};
+      PERSONA_IDS.forEach(function(persona){
+        var list = [];
+        for(var i = 1; i <= VARIANTS; i++){
+          list.push(persona + "/" + ev + "_" + (i < 10 ? "0" : "") + i + ".mp3");
+        }
+        map[ev][persona] = list;
+      });
+    });
+    return map;
+  })();
+
+  (function loadManifest(){
+    if(typeof fetch !== "function") return;
+    fetch(AUDIO_DIR + "manifest.json").then(function(r){
+      return r.ok ? r.json() : null;
+    }).then(function(m){
+      if(!m || !m.eventos) return;
+      var next = {};
+      Object.keys(m.eventos).forEach(function(ev){
+        var byPersona = m.eventos[ev].clipes || {};
+        next[ev] = {};
+        Object.keys(byPersona).forEach(function(p){
+          if(byPersona[p] && byPersona[p].length) next[ev][p] = byPersona[p];
+        });
+      });
+      clips = next;
+    }).catch(function(){});
+  })();
+
+  var player = new Audio();
+  player.preload = "auto";
+  var speechQueue = [];
+  var speaking = false;
+  var lastClip = {};        // persona|evento -> último arquivo tocado
+  var spokenOnce = {};      // marcos já narrados nesta partida
+  var handsSinceTight = 99; // espaça os comentários de placar apertado
+  var warmed = {};
+
+  function pickClip(evento){
+    var byPersona = clips[evento];
+    if(!byPersona) return null;
+    var list = byPersona[state.audio.persona];
+    if(!list || !list.length) return null;
+
+    var key = state.audio.persona + "|" + evento;
+    var pool = list;
+    if(list.length > 1 && lastClip[key]){
+      pool = list.filter(function(c){ return c !== lastClip[key]; });
+      if(!pool.length) pool = list;
+    }
+    var chosen = pool[Math.floor(Math.random() * pool.length)];
+    lastClip[key] = chosen;
+    return AUDIO_DIR + chosen;
+  }
+
+  function say(evento, opts){
+    if(!state.audio.on) return;
+    opts = opts || {};
+    var src = pickClip(evento);
+    if(!src) return;
+    if(opts.interrupt) silence();
+    if(speechQueue.length >= 2) return; // o narrador não empilha fala sobre fala
+    speechQueue.push(src);
+    pump();
+  }
+
+  function pump(){
+    if(speaking || !speechQueue.length) return;
+    speaking = true;
+    player.src = speechQueue.shift();
+    player.volume = state.audio.volume;
+    var p = player.play();
+    if(p && p.catch) p.catch(function(){ speaking = false; });
+  }
+
+  function silence(){
+    speechQueue.length = 0;
+    try{ player.pause(); }catch(e){}
+    speaking = false;
+  }
+
+  player.addEventListener("ended", function(){ speaking = false; pump(); });
+  player.addEventListener("error", function(){ speaking = false; pump(); });
+
+  // Deixa os clipes da persona atual no cache do navegador antes de precisar
+  // deles — o primeiro "Truco!" da noite não pode chegar atrasado.
+  function warmUp(){
+    var persona = state.audio.persona;
+    if(warmed[persona] || !state.audio.on || typeof fetch !== "function") return;
+    warmed[persona] = true;
+    NARRATOR_EVENTS.forEach(function(ev){
+      var list = (clips[ev] || {})[persona] || [];
+      list.forEach(function(c){
+        try{ fetch(AUDIO_DIR + c, { cache: "force-cache" }).catch(function(){}); }catch(e){}
+      });
+    });
+  }
+
+  // Comentário situacional, disparado depois do resultado da mão.
+  function narrateSituation(){
+    var a = state.scores.A, b = state.scores.B;
+    if(a >= 12 || b >= 12) return;
+
+    if(a === 11 && b === 11){
+      if(!spokenOnce.escura){ spokenOnce.escura = true; say("mao_escura"); }
+      return;
+    }
+    if(a === 11 || b === 11){
+      var key = a === 11 ? "onzeA" : "onzeB";
+      if(!spokenOnce[key]){ spokenOnce[key] = true; say("mao_de_onze"); }
+      return;
+    }
+
+    handsSinceTight++;
+    if(Math.abs(a - b) <= 1 && Math.max(a, b) >= 6 &&
+       handsSinceTight >= 3 && Math.random() < 0.55){
+      handsSinceTight = 0;
+      say("placar_apertado");
+    }
+  }
+
+  // Um −1 ou um desfazer que tire o time dos 11 devolve o direito de anunciar
+  // a mão de onze de novo — foi correção de marcação, não a mão acontecendo.
+  function syncMilestones(){
+    if(state.scores.A < 11) delete spokenOnce.onzeA;
+    if(state.scores.B < 11) delete spokenOnce.onzeB;
+    if(state.scores.A < 11 || state.scores.B < 11) delete spokenOnce.escura;
+  }
+
+  function setPersona(id){
+    function apply(){
+      state.audio.persona = id;
+      state.audio.on = true;
+      silence();
+      render();
+      warmUp();
+      // prévia curta: é assim que se escolhe um estilo, ouvindo
+      say(Math.random() < 0.5 ? "truco" : "mao_vencida");
+    }
+    if(ADULT_PERSONAS[id] && !state.audio.adultOk){
+      askConfirm(
+        "Linguagem adulta",
+        "O narrador Bar 18+ usa palavrão pesado em todas as falas. Não é o melhor com criança por perto — o estilo Bar tem a mesma energia, sem palavrão.",
+        "Ligar mesmo assim",
+        function(){ state.audio.adultOk = true; apply(); }
+      );
+      return;
+    }
+    apply();
+  }
+
+  function toggleAudio(){
+    state.audio.on = !state.audio.on;
+    if(!state.audio.on) silence(); else warmUp();
+    render();
+  }
+
   // --- game actions ---
-  function awardPoint(team){
+  var RUN_VALUE = { 1: 1, 3: 1, 6: 3, 9: 6, 12: 9 }; // quem corre entrega o valor anterior da mão
+
+  function registerHand(team, amount, label, kind){
     if(state.scores.A >= 12 || state.scores.B >= 12) return;
-    var amount = state.stake;
     var dealerBefore = state.dealerIndex;
-    state.scores[team] += amount;
+    if(team) state.scores[team] += amount;
     state.history.push({
       team: team,
       amount: amount,
-      label: stakeShort[amount] || (amount + " pts"),
+      label: label,
+      kind: kind,
       scoreA: state.scores.A,
       scoreB: state.scores.B,
       dealerBefore: dealerBefore
     });
     state.stake = 1;
     advanceDealer();
-    bump(team);
+    if(team) bump(team);
 
-    if(state.scores[team] >= 12){
+    if(team && state.scores[team] >= 12){
       state.wins[team] += 1;
       render();
+      say(team === state.audio.myTeam ? "vitoria" : "derrota", { interrupt: true });
       showWin(team);
       return;
     }
+
     render();
+    say(kind === "mao" ? "mao_vencida" : kind); // mao_vencida | correu | cangou
+    narrateSituation();
+  }
+
+  function awardPoint(team){
+    registerHand(team, state.stake, stakeShort[state.stake] || (state.stake + " pts"), "mao");
+  }
+
+  // O time apontado correu; quem marca é o adversário.
+  function awardRun(runner){
+    registerHand(runner === "A" ? "B" : "A", RUN_VALUE[state.stake] || 1, "correu", "correu");
+  }
+
+  function cangar(){
+    registerHand(null, 0, "cangou", "cangou");
   }
 
   function removePoint(team){
     if(state.scores[team] <= 0) return;
     state.scores[team] -= 1;
+    syncMilestones();
     render();
   }
 
   function undo(){
     var last = state.history.pop();
     if(!last) return;
-    state.scores[last.team] -= last.amount;
-    if(state.scores[last.team] < 0) state.scores[last.team] = 0;
+    if(last.team){
+      state.scores[last.team] -= last.amount;
+      if(state.scores[last.team] < 0) state.scores[last.team] = 0;
+    }
     if(typeof last.dealerBefore === "number") state.dealerIndex = last.dealerBefore;
+    silence();
+    syncMilestones();
     render();
   }
 
@@ -1227,18 +1633,26 @@
     state.scores = { A: 0, B: 0 };
     state.history = [];
     state.stake = 1;
+    spokenOnce = {};
+    handsSinceTight = 99;
     el.winOverlay.hidden = true;
     render();
+    say("inicio", { interrupt: true });
   }
 
   function resetEverything(){
     var names = state.names;
     var theme = state.theme;
     var players = state.players;
+    var audio = state.audio;
     state = defaultState();
     state.names = names;
     state.theme = theme;
     state.players = players;
+    state.audio = audio;
+    spokenOnce = {};
+    handsSinceTight = 99;
+    silence();
     render();
   }
 
@@ -1266,17 +1680,63 @@
   });
   el.chips.forEach(function(chip){
     chip.addEventListener("click", function(){
-      state.stake = Number(chip.dataset.stake);
+      var value = Number(chip.dataset.stake);
+      var previous = state.stake;
+      state.stake = value;
+      render();
+      // O aumento é o momento da fala: corta o que estiver tocando.
+      if(value !== previous && STAKE_EVENT[value]) say(STAKE_EVENT[value], { interrupt: true });
+    });
+  });
+  el.cangouBtn.addEventListener("click", cangar);
+  el.ranA.addEventListener("click", function(){ awardRun("A"); });
+  el.ranB.addEventListener("click", function(){ awardRun("B"); });
+
+  el.audioToggle.addEventListener("click", toggleAudio);
+  el.narrChips.forEach(function(chip){
+    chip.addEventListener("click", function(){ setPersona(chip.dataset.persona); });
+  });
+  el.volumeInput.addEventListener("input", function(){
+    state.audio.volume = Number(el.volumeInput.value) / 100;
+    player.volume = state.audio.volume;
+    el.volumeLabel.textContent = el.volumeInput.value + "%";
+    saveState();
+  });
+  el.myTeamButtons.forEach(function(btn){
+    btn.addEventListener("click", function(){
+      state.audio.myTeam = btn.dataset.team;
       render();
     });
   });
+
   el.undoBtn.addEventListener("click", undo);
   el.newMatchBtn.addEventListener("click", newMatch);
-  el.resetAllBtn.addEventListener("click", function(){ el.confirmOverlay.hidden = false; });
-  el.confirmCancel.addEventListener("click", function(){ el.confirmOverlay.hidden = true; });
+
+  var pendingConfirm = null;
+  function askConfirm(title, body, okLabel, onOk){
+    el.confirmTitle.textContent = title;
+    el.confirmBody.textContent = body;
+    el.confirmOk.textContent = okLabel;
+    pendingConfirm = onOk;
+    el.confirmOverlay.hidden = false;
+  }
+  el.resetAllBtn.addEventListener("click", function(){
+    askConfirm(
+      "Zerar tudo?",
+      "Isso apaga o placar, o histórico e as partidas vencidas dos dois times. Os nomes, o narrador e a personalização do painel continuam como estão. Não pode ser desfeito.",
+      "Zerar tudo",
+      resetEverything
+    );
+  });
+  el.confirmCancel.addEventListener("click", function(){
+    el.confirmOverlay.hidden = true;
+    pendingConfirm = null;
+  });
   el.confirmOk.addEventListener("click", function(){
     el.confirmOverlay.hidden = true;
-    resetEverything();
+    var run = pendingConfirm;
+    pendingConfirm = null;
+    if(run) run();
   });
   el.winContinue.addEventListener("click", function(){
     el.winOverlay.hidden = true;
@@ -1449,6 +1909,7 @@
 
   requestWakeLock();
   render();
+  warmUp();
 })();
 </script>
 </body>
