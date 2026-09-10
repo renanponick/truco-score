@@ -1,0 +1,371 @@
+{
+  "pacote": "narrador-truco",
+  "versao": "1.0",
+  "gerado_em": "2026-09-10",
+  "variante_regras": "paulista",
+  "formato_audio": "mp3_22050_32",
+  "modelo": "eleven_v3",
+  "regras_de_uso": {
+    "sorteio": "Cada evento tem varias variacoes. Sorteie uma a cada disparo.",
+    "nao_repetir": "Nunca toque a mesma variacao duas vezes seguidas no mesmo evento.",
+    "persona_unica_por_sessao": "A persona e escolhida pelo usuario e nao muda no meio da partida.",
+    "vocabulario": "Os nomes de evento sao identicos entre personas. Trocar de narrador e trocar de pasta."
+  },
+  "personas": {
+    "serio": {
+      "rotulo": "Sério",
+      "voz": "Lucas - Deep & Profound Narrator",
+      "voice_id": "GIuLCSVfgJaUuh7hYOY8",
+      "estabilidade": 1.0,
+      "linguagem_adulta": false
+    },
+    "comico": {
+      "rotulo": "Cômico",
+      "voz": "Mário - Excited, Constant and Cheerful",
+      "voice_id": "YU8EsJtXFMyKMxYtheDk",
+      "estabilidade": 0.5,
+      "linguagem_adulta": false
+    },
+    "bar": {
+      "rotulo": "Bar",
+      "voz": "Otto - Intimidating and Aggressive",
+      "voice_id": "ycxdm1PRMs962FxyyuJ0",
+      "estabilidade": 0.0,
+      "linguagem_adulta": true
+    },
+    "bar_leve": {
+      "rotulo": "Bar (linguagem livre)",
+      "voz": "Otto - Intimidating and Aggressive",
+      "voice_id": "ycxdm1PRMs962FxyyuJ0",
+      "estabilidade": 0.0,
+      "linguagem_adulta": false
+    }
+  },
+  "eventos": {
+    "inicio": {
+      "descricao": "Cartas distribuidas, comeco da partida",
+      "clipes": {
+        "serio": [
+          "serio/inicio_01.mp3",
+          "serio/inicio_02.mp3",
+          "serio/inicio_03.mp3"
+        ],
+        "comico": [
+          "comico/inicio_01.mp3",
+          "comico/inicio_02.mp3",
+          "comico/inicio_03.mp3"
+        ],
+        "bar": [
+          "bar/inicio_01.mp3",
+          "bar/inicio_02.mp3",
+          "bar/inicio_03.mp3"
+        ],
+        "bar_leve": [
+          "bar_leve/inicio_01.mp3",
+          "bar_leve/inicio_02.mp3",
+          "bar_leve/inicio_03.mp3"
+        ]
+      }
+    },
+    "mao_de_onze": {
+      "descricao": "Um dos times chega a 11 pontos",
+      "clipes": {
+        "serio": [
+          "serio/mao_de_onze_01.mp3",
+          "serio/mao_de_onze_02.mp3",
+          "serio/mao_de_onze_03.mp3"
+        ],
+        "comico": [
+          "comico/mao_de_onze_01.mp3",
+          "comico/mao_de_onze_02.mp3",
+          "comico/mao_de_onze_03.mp3"
+        ],
+        "bar": [
+          "bar/mao_de_onze_01.mp3",
+          "bar/mao_de_onze_02.mp3",
+          "bar/mao_de_onze_03.mp3"
+        ],
+        "bar_leve": [
+          "bar_leve/mao_de_onze_01.mp3",
+          "bar_leve/mao_de_onze_02.mp3",
+          "bar_leve/mao_de_onze_03.mp3"
+        ]
+      }
+    },
+    "mao_escura": {
+      "descricao": "Ambos em 11 — mao jogada sem ver as cartas",
+      "clipes": {
+        "serio": [
+          "serio/mao_escura_01.mp3",
+          "serio/mao_escura_02.mp3",
+          "serio/mao_escura_03.mp3"
+        ],
+        "comico": [
+          "comico/mao_escura_01.mp3",
+          "comico/mao_escura_02.mp3",
+          "comico/mao_escura_03.mp3"
+        ],
+        "bar": [
+          "bar/mao_escura_01.mp3",
+          "bar/mao_escura_02.mp3",
+          "bar/mao_escura_03.mp3"
+        ],
+        "bar_leve": [
+          "bar_leve/mao_escura_01.mp3",
+          "bar_leve/mao_escura_02.mp3",
+          "bar_leve/mao_escura_03.mp3"
+        ]
+      }
+    },
+    "truco": {
+      "descricao": "Truco pedido (mao vale 3)",
+      "clipes": {
+        "serio": [
+          "serio/truco_01.mp3",
+          "serio/truco_02.mp3",
+          "serio/truco_03.mp3"
+        ],
+        "comico": [
+          "comico/truco_01.mp3",
+          "comico/truco_02.mp3",
+          "comico/truco_03.mp3"
+        ],
+        "bar": [
+          "bar/truco_01.mp3",
+          "bar/truco_02.mp3",
+          "bar/truco_03.mp3"
+        ],
+        "bar_leve": [
+          "bar_leve/truco_01.mp3",
+          "bar_leve/truco_02.mp3",
+          "bar_leve/truco_03.mp3"
+        ]
+      }
+    },
+    "seis": {
+      "descricao": "Aumento para 6",
+      "clipes": {
+        "serio": [
+          "serio/seis_01.mp3",
+          "serio/seis_02.mp3",
+          "serio/seis_03.mp3"
+        ],
+        "comico": [
+          "comico/seis_01.mp3",
+          "comico/seis_02.mp3",
+          "comico/seis_03.mp3"
+        ],
+        "bar": [
+          "bar/seis_01.mp3",
+          "bar/seis_02.mp3",
+          "bar/seis_03.mp3"
+        ],
+        "bar_leve": [
+          "bar_leve/seis_01.mp3",
+          "bar_leve/seis_02.mp3",
+          "bar_leve/seis_03.mp3"
+        ]
+      }
+    },
+    "nove": {
+      "descricao": "Aumento para 9",
+      "clipes": {
+        "serio": [
+          "serio/nove_01.mp3",
+          "serio/nove_02.mp3",
+          "serio/nove_03.mp3"
+        ],
+        "comico": [
+          "comico/nove_01.mp3",
+          "comico/nove_02.mp3",
+          "comico/nove_03.mp3"
+        ],
+        "bar": [
+          "bar/nove_01.mp3",
+          "bar/nove_02.mp3",
+          "bar/nove_03.mp3"
+        ],
+        "bar_leve": [
+          "bar_leve/nove_01.mp3",
+          "bar_leve/nove_02.mp3",
+          "bar_leve/nove_03.mp3"
+        ]
+      }
+    },
+    "doze": {
+      "descricao": "Aumento para 12 (maximo)",
+      "clipes": {
+        "serio": [
+          "serio/doze_01.mp3",
+          "serio/doze_02.mp3",
+          "serio/doze_03.mp3"
+        ],
+        "comico": [
+          "comico/doze_01.mp3",
+          "comico/doze_02.mp3",
+          "comico/doze_03.mp3"
+        ],
+        "bar": [
+          "bar/doze_01.mp3",
+          "bar/doze_02.mp3",
+          "bar/doze_03.mp3"
+        ],
+        "bar_leve": [
+          "bar_leve/doze_01.mp3",
+          "bar_leve/doze_02.mp3",
+          "bar_leve/doze_03.mp3"
+        ]
+      }
+    },
+    "correu": {
+      "descricao": "Jogador recusou o truco",
+      "clipes": {
+        "serio": [
+          "serio/correu_01.mp3",
+          "serio/correu_02.mp3",
+          "serio/correu_03.mp3"
+        ],
+        "comico": [
+          "comico/correu_01.mp3",
+          "comico/correu_02.mp3",
+          "comico/correu_03.mp3"
+        ],
+        "bar": [
+          "bar/correu_01.mp3",
+          "bar/correu_02.mp3",
+          "bar/correu_03.mp3"
+        ],
+        "bar_leve": [
+          "bar_leve/correu_01.mp3",
+          "bar_leve/correu_02.mp3",
+          "bar_leve/correu_03.mp3"
+        ]
+      }
+    },
+    "cangou": {
+      "descricao": "Mao empatada, ninguem pontua",
+      "clipes": {
+        "serio": [
+          "serio/cangou_01.mp3",
+          "serio/cangou_02.mp3",
+          "serio/cangou_03.mp3"
+        ],
+        "comico": [
+          "comico/cangou_01.mp3",
+          "comico/cangou_02.mp3",
+          "comico/cangou_03.mp3"
+        ],
+        "bar": [
+          "bar/cangou_01.mp3",
+          "bar/cangou_02.mp3",
+          "bar/cangou_03.mp3"
+        ],
+        "bar_leve": [
+          "bar_leve/cangou_01.mp3",
+          "bar_leve/cangou_02.mp3",
+          "bar_leve/cangou_03.mp3"
+        ]
+      }
+    },
+    "mao_vencida": {
+      "descricao": "Mao ganha, pontos computados",
+      "clipes": {
+        "serio": [
+          "serio/mao_vencida_01.mp3",
+          "serio/mao_vencida_02.mp3",
+          "serio/mao_vencida_03.mp3"
+        ],
+        "comico": [
+          "comico/mao_vencida_01.mp3",
+          "comico/mao_vencida_02.mp3",
+          "comico/mao_vencida_03.mp3"
+        ],
+        "bar": [
+          "bar/mao_vencida_01.mp3",
+          "bar/mao_vencida_02.mp3",
+          "bar/mao_vencida_03.mp3"
+        ],
+        "bar_leve": [
+          "bar_leve/mao_vencida_01.mp3",
+          "bar_leve/mao_vencida_02.mp3",
+          "bar_leve/mao_vencida_03.mp3"
+        ]
+      }
+    },
+    "vitoria": {
+      "descricao": "Fim de jogo — o jogador venceu",
+      "clipes": {
+        "serio": [
+          "serio/vitoria_01.mp3",
+          "serio/vitoria_02.mp3",
+          "serio/vitoria_03.mp3"
+        ],
+        "comico": [
+          "comico/vitoria_01.mp3",
+          "comico/vitoria_02.mp3",
+          "comico/vitoria_03.mp3"
+        ],
+        "bar": [
+          "bar/vitoria_01.mp3",
+          "bar/vitoria_02.mp3",
+          "bar/vitoria_03.mp3"
+        ],
+        "bar_leve": [
+          "bar_leve/vitoria_01.mp3",
+          "bar_leve/vitoria_02.mp3",
+          "bar_leve/vitoria_03.mp3"
+        ]
+      }
+    },
+    "derrota": {
+      "descricao": "Fim de jogo — o jogador perdeu",
+      "clipes": {
+        "serio": [
+          "serio/derrota_01.mp3",
+          "serio/derrota_02.mp3",
+          "serio/derrota_03.mp3"
+        ],
+        "comico": [
+          "comico/derrota_01.mp3",
+          "comico/derrota_02.mp3",
+          "comico/derrota_03.mp3"
+        ],
+        "bar": [
+          "bar/derrota_01.mp3",
+          "bar/derrota_02.mp3",
+          "bar/derrota_03.mp3"
+        ],
+        "bar_leve": [
+          "bar_leve/derrota_01.mp3",
+          "bar_leve/derrota_02.mp3",
+          "bar_leve/derrota_03.mp3"
+        ]
+      }
+    },
+    "placar_apertado": {
+      "descricao": "Placar empatado ou com 1 ponto de diferenca",
+      "clipes": {
+        "serio": [
+          "serio/placar_apertado_01.mp3",
+          "serio/placar_apertado_02.mp3",
+          "serio/placar_apertado_03.mp3"
+        ],
+        "comico": [
+          "comico/placar_apertado_01.mp3",
+          "comico/placar_apertado_02.mp3",
+          "comico/placar_apertado_03.mp3"
+        ],
+        "bar": [
+          "bar/placar_apertado_01.mp3",
+          "bar/placar_apertado_02.mp3",
+          "bar/placar_apertado_03.mp3"
+        ],
+        "bar_leve": [
+          "bar_leve/placar_apertado_01.mp3",
+          "bar_leve/placar_apertado_02.mp3",
+          "bar_leve/placar_apertado_03.mp3"
+        ]
+      }
+    }
+  }
+}
